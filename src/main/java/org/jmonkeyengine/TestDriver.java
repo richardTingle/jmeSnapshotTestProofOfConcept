@@ -120,7 +120,7 @@ public class TestDriver extends BaseAppState{
             fail("More than one screenshot found in the temporary directory.");
         }
 
-        Path generatedImage = imageFiles.getFirst();
+        Path generatedImage = imageFiles.get(0);
         Path expectedImage = Path.of("src/test/resources/App1.png");
 
         try {
