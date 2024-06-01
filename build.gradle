@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.jmonkeyengine'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    jmonkeyengine_version = '3.6.1-stable'
+}
+
+dependencies {
+    implementation platform('org.junit:junit-bom:5.9.1')
+    implementation 'org.junit.jupiter:junit-jupiter'
+    implementation "org.jmonkeyengine:jme3-core:$jmonkeyengine_version"
+    implementation "org.jmonkeyengine:jme3-lwjgl3:$jmonkeyengine_version"
+    implementation "org.jmonkeyengine:jme3-desktop:$jmonkeyengine_version"
+}
+
+test {
+    useJUnitPlatform()
+}
