@@ -10,10 +10,13 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import org.jmonkeyengine.TestDriver;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 public class SimpleBlueCube{
 
-    public static void main(String[] args){
+    @Test
+    public void simpleBlueCube(TestInfo testInfo){
 
         AppState simpleBlueCube = new BaseAppState(){
             @Override
@@ -33,7 +36,8 @@ public class SimpleBlueCube{
 
             @Override protected void onDisable(){}
         };
+        String fullyQualifiedTestName = testInfo.getTestClass().get().getName() + "." + testInfo.getTestMethod().get().getName();
 
-        TestDriver.bootAppForTest(new AppSettings(true), simpleBlueCube);
+        TestDriver.bootAppForTest(new AppSettings(true),fullyQualifiedTestName,simpleBlueCube);
     }
 }

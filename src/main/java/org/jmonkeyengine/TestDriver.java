@@ -73,7 +73,7 @@ public class TestDriver extends BaseAppState{
      * - allows 1 update tick to occur, requests a screenshot (during that tick)
      * - on the next tick compares the screenshot to the expected screenshot (if any). Fails the test if they are different
      */
-    public static void bootAppForTest(AppSettings appSettings, AppState... initialStates){
+    public static void bootAppForTest(AppSettings appSettings, String imageFile, AppState... initialStates){
 
         Path imageTempDir;
 
