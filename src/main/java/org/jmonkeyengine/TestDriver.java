@@ -121,7 +121,15 @@ public class TestDriver extends BaseAppState{
         }
 
         Path generatedImage = imageFiles.get(0);
-        Path expectedImage = Path.of("src/test/resources/App1.png");
+        Path expectedImage = Path.of("src/test/resources/" + imageFile + ".png");
+
+        if(!Files.exists(expectedImage)){
+            try{
+                Files.copy(generatedImage, expectedImage);
+            } catch(IOException e){
+                throw new RuntimeException(e);
+            }
+        }
 
         try {
             BufferedImage img1 = ImageIO.read(generatedImage.toFile());

@@ -13,10 +13,10 @@ import org.jmonkeyengine.TestDriver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-public class SimpleBlueCube{
+public class SimpleFailBlueCube{
 
     @Test
-    public void simpleBlueCube(TestInfo testInfo){
+    public void simpleFailCube(TestInfo testInfo){
 
         AppState simpleBlueCube = new BaseAppState(){
             @Override
