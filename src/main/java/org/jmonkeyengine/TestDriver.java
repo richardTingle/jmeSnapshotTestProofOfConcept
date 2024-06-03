@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -140,6 +141,10 @@ public class TestDriver extends BaseAppState{
             if (compareImages(img1, img2)) {
                 System.out.println("Images are identical.");
             } else {
+                //save the generated image to the build directory
+                Path savedImage = Path.of("build/changed-images/" + imageFile + ".png");
+                Files.createDirectories(savedImage.getParent());
+                Files.copy(generatedImage, savedImage, StandardCopyOption.REPLACE_EXISTING);
                 fail("Images are different.");
             }
         } catch (IOException e) {

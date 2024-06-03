@@ -44,9 +44,21 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle Wrapper
       run: ./gradlew build
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      if: success() || failure() # always run even if the previous step fails
+      with:
+        name: test-results
+        path: '**/build/test-results/**'
     - name: Upload Test Reports
       uses: actions/upload-artifact@v3
       if: success() || failure() # always run even if the previous step fails
       with:
         name: test-reports
-        path: '**/build/test-results/**'
+        path: '**/build/test-reports/**'
+    - name: Upload Changed Image
+      uses: actions/upload-artifact@v3
+      if: success() || failure() # always run even if the previous step fails
+      with:
+        name: changed-images
+        path: '**/build/changed-images/**'
