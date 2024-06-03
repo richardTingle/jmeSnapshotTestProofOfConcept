@@ -69,7 +69,7 @@ public class TestPostWater{
 
 
                 simpleApplication.getCamera().setLocation(new Vector3f(-370.31592f, 182.04016f, 196.81192f));
-                simpleApplication.getCamera().setRotation(new Quaternion(0.015302252f, 0.9304095f, -0.039101653f, 0.3641086f));
+                simpleApplication.getCamera().setRotation(new Quaternion(0.10058216f, 0.51807004f, -0.061508257f, 0.8471738f));
 
                 Spatial sky = SkyFactory.createSky(assetManager,
                         "Scenes/Beach/FullskiesSunset0068.dds", EnvMapType.CubeMap);
