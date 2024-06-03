@@ -29,7 +29,11 @@ jobs:
       run: |
         echo "LIBGL_ALWAYS_SOFTWARE=1" >> $GITHUB_ENV
         echo "MESA_LOADER_DRIVER_OVERRIDE=llvmpipe" >> $GITHUB_ENV
-
+    - name: Start xvfb
+      run: |
+        sudo Xvfb :99 -ac -screen 0 1280x1024x16 &
+        export DISPLAY=:99
+        echo "DISPLAY=:99" >> $GITHUB_ENV
     - name: Verify Mesa3D Installation
       run: |
         glxinfo | grep "OpenGL"
