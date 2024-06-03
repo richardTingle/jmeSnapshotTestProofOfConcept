@@ -20,6 +20,20 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - name: Install Mesa3D
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mesa-utils libgl1-mesa-dri libgl1-mesa-glx
+
+    - name: Set environment variables for Mesa3D
+      run: |
+        echo "LIBGL_ALWAYS_SOFTWARE=1" >> $GITHUB_ENV
+        echo "MESA_LOADER_DRIVER_OVERRIDE=llvmpipe" >> $GITHUB_ENV
+
+    - name: Verify Mesa3D Installation
+      run: |
+        glxinfo | grep "OpenGL"
+
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
     - name: Grant execute permission for gradlew
