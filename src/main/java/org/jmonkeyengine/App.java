@@ -5,6 +5,7 @@ package org.jmonkeyengine;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppState;
+import com.jme3.app.state.VideoRecorderAppState;
 
 public class App extends SimpleApplication {
 
@@ -13,6 +14,8 @@ public class App extends SimpleApplication {
     }
 
     @Override
-    public void simpleInitApp(){}
+    public void simpleInitApp(){
+        setTimer(new VideoRecorderAppState.IsoTimer(60));
+    }
 
 }
