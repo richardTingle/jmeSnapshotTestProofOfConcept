@@ -75,6 +75,8 @@ public class TestDriver extends BaseAppState{
      */
     public static void bootAppForTest(AppSettings appSettings, String imageFile, AppState... initialStates){
 
+        appSettings.setAudioRenderer(null); // Disable audio (for headless)
+
         Path imageTempDir;
 
         try{
