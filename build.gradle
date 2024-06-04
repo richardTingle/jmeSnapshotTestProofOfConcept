@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "io.qameta.allure" version "2.11.2"
 }
 
 group = 'org.jmonkeyengine'
@@ -13,6 +14,12 @@ ext {
     jmonkeyengine_version = '3.6.1-stable'
 }
 
+def allureVersion = "2.25.0"
+
+allure {
+    version = "$allureVersion"
+}
+
 dependencies {
     implementation platform('org.junit:junit-bom:5.9.1')
     implementation 'org.junit.jupiter:junit-jupiter'
@@ -22,8 +29,19 @@ dependencies {
     implementation "org.jmonkeyengine:jme3-effects:$jmonkeyengine_version"
     implementation "org.jmonkeyengine:jme3-terrain:$jmonkeyengine_version"
     implementation "org.jmonkeyengine:jme3-testdata:$jmonkeyengine_version"
+
+    /*
+    agent "org.aspectj:aspectjweaver:$aspectJVersion"
+
+    // Import allure-bom to ensure correct versions of all the dependencies are used
+    testImplementation platform("io.qameta.allure:allure-bom:$allureVersion")
+    // Add necessary Allure dependencies to dependencies section
+    testImplementation "io.qameta.allure:allure-junit5"
+
+     */
 }
 
 test {
     useJUnitPlatform()
+    //jvmArgs = [ "-javaagent:${configurations.agent.singleFile}" ]
 }
