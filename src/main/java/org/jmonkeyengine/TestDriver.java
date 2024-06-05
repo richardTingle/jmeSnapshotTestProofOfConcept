@@ -151,15 +151,8 @@ public class TestDriver extends BaseAppState{
                 Files.createDirectories(savedImage.getParent());
                 Files.copy(generatedImage, savedImage, StandardCopyOption.REPLACE_EXISTING);
 
-                ExtentTest test = ExtentReportExtension.getCurrentTest();
-                //test.addScreenCaptureFromPath(expectedImage.toAbsolutePath().toString());
-                //test.addScreenCaptureFromPath(savedImage.toString());
-
-                ExtentReportExtension.getCurrentTest().createNode("Expected");
                 attachImage("Expected", imageFile + "_expected.png", expectedImage);
-                ExtentReportExtension.getCurrentTest().createNode("Actual");
                 attachImage("Actual", imageFile + "_actual.png", savedImage);
-                ExtentReportExtension.getCurrentTest().createNode("Diff");
                 attachImage("Diff", imageFile + "_diff.png", createComparisonImage(img1, img2));
 
                 fail(IMAGES_ARE_DIFFERENT);
