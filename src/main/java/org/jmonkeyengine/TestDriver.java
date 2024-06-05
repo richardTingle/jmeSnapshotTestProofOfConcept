@@ -155,9 +155,12 @@ public class TestDriver extends BaseAppState{
                 //test.addScreenCaptureFromPath(expectedImage.toAbsolutePath().toString());
                 //test.addScreenCaptureFromPath(savedImage.toString());
 
-                attachImage(imageFile + "_expected.png", expectedImage);
-                attachImage(imageFile + "_actual.png", savedImage);
-                attachImage(imageFile + "_diff.png", createComparisonImage(img1, img2));
+                ExtentReportExtension.getCurrentTest().createNode("Expected");
+                attachImage("Expected", imageFile + "_expected.png", expectedImage);
+                ExtentReportExtension.getCurrentTest().createNode("Actual");
+                attachImage("Actual", imageFile + "_actual.png", savedImage);
+                ExtentReportExtension.getCurrentTest().createNode("Diff");
+                attachImage("Diff", imageFile + "_diff.png", createComparisonImage(img1, img2));
 
                 fail(IMAGES_ARE_DIFFERENT);
             }
@@ -166,16 +169,16 @@ public class TestDriver extends BaseAppState{
         }
     }
 
-    public static void attachImage(String name, Path originalImage) throws IOException{
+    public static void attachImage(String title, String fileName, Path originalImage) throws IOException{
         ExtentTest test = ExtentReportExtension.getCurrentTest();
-        Files.copy(originalImage.toAbsolutePath(), Path.of("build/reports/" + name), StandardCopyOption.REPLACE_EXISTING);
-        test.addScreenCaptureFromPath(name);
+        Files.copy(originalImage.toAbsolutePath(), Path.of("build/reports/" + fileName), StandardCopyOption.REPLACE_EXISTING);
+        test.addScreenCaptureFromPath(fileName, title);
     }
 
-    public static void attachImage(String name, BufferedImage originalImage) throws IOException{
+    public static void attachImage(String title, String fileName, BufferedImage originalImage) throws IOException{
         ExtentTest test = ExtentReportExtension.getCurrentTest();
-        ImageIO.write(originalImage, "png", Path.of("build/reports/" + name).toFile());
-        test.addScreenCaptureFromPath(name);
+        ImageIO.write(originalImage, "png", Path.of("build/reports/" + fileName).toFile());
+        test.addScreenCaptureFromPath(fileName, title);
     }
 
     private static boolean compareImages(BufferedImage img1, BufferedImage img2) {
