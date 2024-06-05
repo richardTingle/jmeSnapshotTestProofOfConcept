@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id "io.qameta.allure" version "2.11.2"
 }
 
 group = 'org.jmonkeyengine'
@@ -14,11 +13,6 @@ ext {
     jmonkeyengine_version = '3.6.1-stable'
 }
 
-def allureVersion = "2.25.0"
-
-allure {
-    version = "$allureVersion"
-}
 
 dependencies {
     implementation platform('org.junit:junit-bom:5.9.1')
@@ -29,6 +23,8 @@ dependencies {
     implementation "org.jmonkeyengine:jme3-effects:$jmonkeyengine_version"
     implementation "org.jmonkeyengine:jme3-terrain:$jmonkeyengine_version"
     implementation "org.jmonkeyengine:jme3-testdata:$jmonkeyengine_version"
+
+    implementation 'com.aventstack:extentreports:5.1.1'
 
     /*
     agent "org.aspectj:aspectjweaver:$aspectJVersion"

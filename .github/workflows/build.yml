@@ -44,9 +44,6 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle Wrapper
       run: ./gradlew build
-    - name: Allure report
-      if: success() || failure() # always run even if the previous step fails
-      run: ./gradlew allureReport
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
       if: success() || failure() # always run even if the previous step fails

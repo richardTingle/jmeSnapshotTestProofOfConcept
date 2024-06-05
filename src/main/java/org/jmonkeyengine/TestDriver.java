@@ -1,5 +1,6 @@
 package org.jmonkeyengine;
 
+import com.aventstack.extentreports.ExtentTest;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppState;
@@ -27,6 +28,10 @@ import static org.junit.jupiter.api.Assertions.fail;
  * running the test
  */
 public class TestDriver extends BaseAppState{
+
+    public static final String IMAGES_ARE_DIFFERENT = "Images are different.";
+
+    public static final String IMAGES_ARE_DIFFERENT_SIZES = "Images are different sizes.";
 
     private static final Executor executor = Executors.newSingleThreadExecutor( (r) -> {
         Thread thread = new Thread(r);
@@ -139,21 +144,45 @@ public class TestDriver extends BaseAppState{
             BufferedImage img2 = ImageIO.read(expectedImage.toFile());
 
             if (compareImages(img1, img2)) {
-                System.out.println("Images are identical.");
+
             } else {
                 //save the generated image to the build directory
                 Path savedImage = Path.of("build/changed-images/" + imageFile + ".png");
                 Files.createDirectories(savedImage.getParent());
                 Files.copy(generatedImage, savedImage, StandardCopyOption.REPLACE_EXISTING);
-                fail("Images are different.");
+
+                ExtentTest test = ExtentReportExtension.getCurrentTest();
+                //test.addScreenCaptureFromPath(expectedImage.toAbsolutePath().toString());
+                //test.addScreenCaptureFromPath(savedImage.toString());
+
+                attachImage(imageFile + "_expected.png", expectedImage);
+                attachImage(imageFile + "_actual.png", savedImage);
+                attachImage(imageFile + "_diff.png", createComparisonImage(img1, img2));
+
+                fail(IMAGES_ARE_DIFFERENT);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error reading images", e);
         }
     }
+
+    public static void attachImage(String name, Path originalImage) throws IOException{
+        ExtentTest test = ExtentReportExtension.getCurrentTest();
+        Files.copy(originalImage.toAbsolutePath(), Path.of("build/reports/" + name), StandardCopyOption.REPLACE_EXISTING);
+        test.addScreenCaptureFromPath(name);
+    }
+
+    public static void attachImage(String name, BufferedImage originalImage) throws IOException{
+        ExtentTest test = ExtentReportExtension.getCurrentTest();
+        ImageIO.write(originalImage, "png", Path.of("build/reports/" + name).toFile());
+        test.addScreenCaptureFromPath(name);
+    }
+
     private static boolean compareImages(BufferedImage img1, BufferedImage img2) {
         if (img1.getWidth() != img2.getWidth() || img1.getHeight() != img2.getHeight()) {
-            return false;
+            ExtentReportExtension.getCurrentTest().createNode("Image 1 size : " + img1.getWidth() + "x" + img1.getHeight());
+            ExtentReportExtension.getCurrentTest().createNode("Image 2 size : " + img2.getWidth() + "x" + img2.getHeight());
+            fail(IMAGES_ARE_DIFFERENT_SIZES);
         }
 
         for (int y = 0; y < img1.getHeight(); y++) {
@@ -164,6 +193,21 @@ public class TestDriver extends BaseAppState{
             }
         }
         return true;
+    }
+
+    private static BufferedImage createComparisonImage(BufferedImage img1, BufferedImage img2) {
+        BufferedImage comparisonImage = new BufferedImage(img1.getWidth(), img1.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < img1.getHeight(); y++) {
+            for (int x = 0; x < img1.getWidth(); x++) {
+                if (img1.getRGB(x, y) != img2.getRGB(x, y)) {
+                    comparisonImage.setRGB(x, y, 0xFFFF0000);
+                }else{
+                    comparisonImage.setRGB(x, y, img1.getRGB(x, y));
+                }
+            }
+        }
+        return comparisonImage;
     }
 
 }

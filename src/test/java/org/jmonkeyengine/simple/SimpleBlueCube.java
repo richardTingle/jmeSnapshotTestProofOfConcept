@@ -9,10 +9,13 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
+import org.jmonkeyengine.ExtentReportExtension;
 import org.jmonkeyengine.TestDriver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(ExtentReportExtension.class)
 public class SimpleBlueCube{
 
     @Test
@@ -21,6 +24,8 @@ public class SimpleBlueCube{
         AppState simpleBlueCube = new BaseAppState(){
             @Override
             protected void initialize(Application app){
+                app.getViewPort().setBackgroundColor(ColorRGBA.Brown);
+
                 Box b = new Box(1, 1, 1);
                 Geometry geom = new Geometry("Box", b);
                 Material mat = new Material(app.getAssetManager(),
