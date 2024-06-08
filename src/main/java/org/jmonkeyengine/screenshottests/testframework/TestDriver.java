@@ -31,7 +31,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * The test driver allows for controlled interaction between the thread running the application and the thread
@@ -236,6 +236,12 @@ public class TestDriver extends BaseAppState{
         if(failureMessage!=null){
             fail(failureMessage);
         }
+    }
+
+    private static void fail(String message){
+        //See https://github.com/gradle/gradle/issues/27871. There is a problem with fail, this is a workaround
+        //noinspection SimplifiableAssertion
+        assertFalse(true, message);
     }
 
     private static void clearTemporaryFolder(Path temporaryFolder){
