@@ -1,15 +1,13 @@
-package org.jmonkeyengine.water;
+package org.jmonkeyengine.screenshottests.water;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
-import com.jme3.app.state.AppState;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.asset.AssetManager;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
@@ -20,7 +18,6 @@ import com.jme3.post.filters.LightScatteringFilter;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.system.AppSettings;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
@@ -30,27 +27,23 @@ import com.jme3.texture.Texture2D;
 import com.jme3.util.SkyFactory;
 import com.jme3.util.SkyFactory.EnvMapType;
 import com.jme3.water.WaterFilter;
-import org.jmonkeyengine.ExtentReportExtension;
-import org.jmonkeyengine.TestDriver;
+import org.jmonkeyengine.screenshottests.testframework.ExtentReportExtension;
+import org.jmonkeyengine.screenshottests.testframework.ScreenshotTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ExtentReportExtension.class)
 public class TestPostWater{
 
+    /**
+     * This test creates a scene with a terrain and post process water filter.
+     */
     @Test
-    public void testPostWater(TestInfo testInfo){
-       AppState simpleBlueCube = new BaseAppState(){
-            final private Vector3f lightDir = new Vector3f(-4.9236743f, -1.27054665f, 5.896916f);
-            private WaterFilter water;
-
-            private float time = 0.0f;
-            private float waterHeight = 0.0f;
-            final private float initialWaterHeight = 90f;//0.8f;
-
-            @Override
+    public void testPostWater(){
+       new ScreenshotTest(new BaseAppState(){
+           @Override
             protected void initialize(Application app){
+                Vector3f lightDir = new Vector3f(-4.9236743f, -1.27054665f, 5.896916f);
                 SimpleApplication simpleApplication = ((SimpleApplication)app);
                 Node rootNode = simpleApplication.getRootNode();
                 AssetManager assetManager = simpleApplication.getAssetManager();
@@ -80,7 +73,7 @@ public class TestPostWater{
                 simpleApplication.getCamera().setFrustumFar(4000);
 
                 //Water Filter
-                water = new WaterFilter(rootNode, lightDir);
+                WaterFilter water = new WaterFilter(rootNode, lightDir);
                 water.setWaterColor(new ColorRGBA().setAsSrgb(0.0078f, 0.3176f, 0.5f, 1.0f));
                 water.setDeepWaterColor(new ColorRGBA().setAsSrgb(0.0039f, 0.00196f, 0.145f, 1.0f));
                 water.setUnderWaterFogDistance(80);
@@ -96,6 +89,8 @@ public class TestPostWater{
                 water.setMaxAmplitude(2f);
                 water.setFoamTexture((Texture2D) assetManager.loadTexture("Common/MatDefs/Water/Textures/foam2.jpg"));
                 water.setRefractionStrength(0.2f);
+                //0.8f;
+                float initialWaterHeight = 90f;
                 water.setWaterHeight(initialWaterHeight);
 
                 //Bloom Filter
@@ -136,10 +131,6 @@ public class TestPostWater{
             @Override
             public void update(float tpf){
                 super.update(tpf);
-                //     box.updateGeometricState();
-                time += tpf;
-                waterHeight = (float) Math.cos(((time * 0.6f) % FastMath.TWO_PI)) * 1.5f;
-                water.setWaterHeight(initialWaterHeight + waterHeight);
             }
 
             private void createTerrain(Node rootNode, AssetManager assetManager) {
@@ -171,13 +162,9 @@ public class TestPostWater{
                 matRock.setTexture("NormalMap_1", normalMap1);
                 matRock.setTexture("NormalMap_2", normalMap2);
 
-                AbstractHeightMap heightmap = null;
-                try {
-                    heightmap = new ImageBasedHeightMap(heightMapImage.getImage(), 0.25f);
-                    heightmap.load();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                AbstractHeightMap heightmap = new ImageBasedHeightMap(heightMapImage.getImage(), 0.25f);
+                heightmap.load();
+
                 TerrainQuad terrain
                         = new TerrainQuad("terrain", 65, 513, heightmap.getHeightMap());
                 terrain.setMaterial(matRock);
@@ -188,10 +175,7 @@ public class TestPostWater{
                 terrain.setShadowMode(ShadowMode.Receive);
                 rootNode.attachChild(terrain);
             }
-        };
-        String fullyQualifiedTestName = testInfo.getTestClass().get().getName() + "." + testInfo.getTestMethod().get().getName();
-
-        TestDriver.bootAppForTest(new AppSettings(true),fullyQualifiedTestName,simpleBlueCube);
+        }).run();
     }
 
 }
