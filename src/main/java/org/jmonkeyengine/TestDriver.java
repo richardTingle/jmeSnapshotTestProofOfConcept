@@ -9,8 +9,13 @@ import com.jme3.app.state.ScreenshotAppState;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -150,6 +155,7 @@ public class TestDriver extends BaseAppState{
                 Path savedImage = Path.of("build/changed-images/" + imageFile + ".png");
                 Files.createDirectories(savedImage.getParent());
                 Files.copy(generatedImage, savedImage, StandardCopyOption.REPLACE_EXISTING);
+                aggressivelyCompressImage(savedImage);
 
                 attachImage("Expected", imageFile + "_expected.png", expectedImage);
                 attachImage("Actual", imageFile + "_actual.png", savedImage);
@@ -160,6 +166,33 @@ public class TestDriver extends BaseAppState{
         } catch (IOException e) {
             throw new RuntimeException("Error reading images", e);
         }
+    }
+
+    /**
+     * This remains lossless but makes the maximum effort to compress the image. As these images
+     * may be committed to the repository it is important to keep them as small as possible and worth the extra CPU time
+     * to do so
+     */
+    public static void aggressivelyCompressImage(Path path) throws IOException {
+        // Load your image
+        BufferedImage image = ImageIO.read(path.toFile());
+
+        // Get a PNG writer
+        ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
+        ImageWriteParam writeParam = writer.getDefaultWriteParam();
+
+        // Increase compression effort
+        writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        writeParam.setCompressionQuality(0.0f); // 0.0 means maximum compression
+
+        // Save the image with increased compression
+        try (ImageOutputStream outputStream = ImageIO.createImageOutputStream(path.toFile())) {
+            writer.setOutput(outputStream);
+            writer.write(null, new IIOImage(image, null, null), writeParam);
+        }
+
+        // Clean up
+        writer.dispose();
     }
 
     public static void attachImage(String title, String fileName, Path originalImage) throws IOException{
