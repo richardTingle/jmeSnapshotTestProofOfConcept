@@ -23,18 +23,12 @@ dependencies {
     implementation "org.jmonkeyengine:jme3-effects:$jmonkeyengine_version"
     implementation "org.jmonkeyengine:jme3-terrain:$jmonkeyengine_version"
     implementation "org.jmonkeyengine:jme3-testdata:$jmonkeyengine_version"
+    implementation "org.jmonkeyengine:jme3-plugins:$jmonkeyengine_version"
 
     implementation 'com.aventstack:extentreports:5.1.1'
 
-    /*
-    agent "org.aspectj:aspectjweaver:$aspectJVersion"
+    implementation 'commons-io:commons-io:2.8.0'
 
-    // Import allure-bom to ensure correct versions of all the dependencies are used
-    testImplementation platform("io.qameta.allure:allure-bom:$allureVersion")
-    // Add necessary Allure dependencies to dependencies section
-    testImplementation "io.qameta.allure:allure-junit5"
-
-     */
 }
 
 test {

@@ -4,12 +4,16 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
+import org.apache.commons.io.output.TeeOutputStream;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -29,6 +33,37 @@ public class ExtentReportExtension implements BeforeAllCallback, AfterAllCallbac
 
             extent = new ExtentReports();
             extent.attachReporter(spark);
+
+            PrintStream originalOut = System.out;
+
+            // Initialize the ByteArrayOutputStream
+            FileOutputStream outputStreamCaptor = null;
+            try{
+                outputStreamCaptor = new FileOutputStream("build/reports/rawOutput.txt");
+            } catch(FileNotFoundException e){
+                throw new RuntimeException(e);
+            }
+
+            // Create a TeeOutputStream to write to both the original System.out and the output stream captor
+            TeeOutputStream teeOut = new TeeOutputStream(originalOut, outputStreamCaptor);
+            System.setOut(new PrintStream(teeOut));
+
+            PrintStream originalErr = System.err;
+
+            // Initialize the ByteArrayOutputStream
+            FileOutputStream errorStreamCaptor = null;
+            try{
+                errorStreamCaptor = new FileOutputStream("build/reports/rawError.txt");
+            } catch(FileNotFoundException e){
+                throw new RuntimeException(e);
+            }
+
+            // Create a TeeOutputStream to write to both the original System.err and the error stream captor
+            TeeOutputStream teeErr = new TeeOutputStream(originalErr, errorStreamCaptor);
+            System.setErr(new PrintStream(teeErr));
+
+            System.out.println("Test");
+            System.err.println("Error");
         }
     }
 
