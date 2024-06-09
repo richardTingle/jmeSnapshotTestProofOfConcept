@@ -59,6 +59,7 @@ public class ScreenshotTest{
     public void run(){
         AppSettings settings = new AppSettings(true);
         settings.setResolution(resolution.getWidth(), resolution.getHeight());
+        settings.setRenderer(AppSettings.LWJGL_OPENGL45);
         settings.setAudioRenderer(null); // Disable audio (for headless)
 
         String imageFilePrefix = baseImageFileName == null ? calculateImageFilePrefix() : baseImageFileName;

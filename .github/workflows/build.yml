@@ -25,6 +25,7 @@ jobs:
         mkdir -p build/reports
     - name: Set Mesa3D log file
       run: |
+        echo "MESA_LOG_LEVEL=debug" >> $GITHUB_ENV
         echo "LIBGL_DEBUG=verbose" >> $GITHUB_ENV
         echo "MESA_DEBUG=flush" >> $GITHUB_ENV
         echo "MESA_LOG_FILE=build/reports/mesa3d.log" >> $GITHUB_ENV
