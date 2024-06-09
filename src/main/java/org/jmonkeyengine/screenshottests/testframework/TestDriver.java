@@ -59,13 +59,13 @@ public class TestDriver extends BaseAppState{
 
     Collection<Integer> framesToTakeScreenshotsOn;
 
-    ScreenshotAppState screenshotAppState;
+    ScreenshotNoInputAppState screenshotAppState;
 
     private final Object waitLock = new Object();
 
     private final int tickToTerminateApp;
 
-    public TestDriver(ScreenshotAppState screenshotAppState, Collection<Integer> framesToTakeScreenshotsOn){
+    public TestDriver(ScreenshotNoInputAppState screenshotAppState, Collection<Integer> framesToTakeScreenshotsOn){
         this.screenshotAppState = screenshotAppState;
         this.framesToTakeScreenshotsOn = framesToTakeScreenshotsOn;
         this.tickToTerminateApp = framesToTakeScreenshotsOn.stream().mapToInt(i -> i).max().orElse(0) + 1;
@@ -115,7 +115,7 @@ public class TestDriver extends BaseAppState{
             throw new RuntimeException(e);
         }
 
-        ScreenshotAppState screenshotAppState = new ScreenshotAppState(imageTempDir.toString() + "/");
+        ScreenshotNoInputAppState screenshotAppState = new ScreenshotNoInputAppState(imageTempDir.toString() + "/");
         String screenshotAppFileNamePrefix = "Screenshot-";
         screenshotAppState.setFileName(screenshotAppFileNamePrefix);
 
