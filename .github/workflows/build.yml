@@ -23,7 +23,9 @@ jobs:
     - name: Create reports directory
       run: |
         mkdir -p build/reports
-
+    - name: Set Mesa3D log file
+      run: |
+        echo "MESA_LOG_FILE=build/reports/mesa3d.log" >> $GITHUB_ENV
     - name: Install Mesa3D
       run: |
         sudo apt-get update
