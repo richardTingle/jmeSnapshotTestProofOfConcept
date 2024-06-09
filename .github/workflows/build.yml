@@ -28,7 +28,7 @@ jobs:
         echo "MESA_LOG_LEVEL=debug" >> $GITHUB_ENV
         echo "LIBGL_DEBUG=verbose" >> $GITHUB_ENV
         echo "MESA_DEBUG=flush" >> $GITHUB_ENV
-        echo "MESA_LOG_FILE=build/reports/mesa3d.log" >> $GITHUB_ENV
+        echo "GALLIUM_LOG_FILE=build/reports/mesa3d.log" >> $GITHUB_ENV
     - name: Install Mesa3D
       run: |
         sudo apt-get update
@@ -37,7 +37,7 @@ jobs:
     - name: Set environment variables for Mesa3D
       run: |
         echo "LIBGL_ALWAYS_SOFTWARE=1" >> $GITHUB_ENV
-        echo "MESA_LOADER_DRIVER_OVERRIDE=llvmpipe" >> $GITHUB_ENV
+        echo "MESA_LOADER_DRIVER_OVERRIDE=softpipe" >> $GITHUB_ENV
     - name: Start xvfb
       run: |
         sudo Xvfb :99 -ac -screen 0 1024x768x24 > build/reports/xvfb.log 2>&1 &
