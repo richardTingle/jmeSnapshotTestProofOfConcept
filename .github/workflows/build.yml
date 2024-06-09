@@ -71,3 +71,9 @@ jobs:
       with:
         name: changed-images
         path: '**/build/changed-images/**'
+    - name: Upload error logs
+      if: always()  # Ensures this step runs even if previous steps fail
+      uses: actions/upload-artifact@v3
+      with:
+        name: hs_err_logs
+        path: /home/runner/work/jmonkeyengine/jmonkeyengine/jme3-screenshot-tests/hs_err_pid*.log
