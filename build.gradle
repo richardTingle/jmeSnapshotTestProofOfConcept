@@ -33,5 +33,5 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    //jvmArgs = [ "-javaagent:${configurations.agent.singleFile}" ]
+    jvmArgs = [ "-Xmx1g" ]
 }
