@@ -32,20 +32,16 @@ jobs:
     - name: Install Mesa3D
       run: |
         sudo apt-get update
-        sudo apt-get install -y mesa-utils libgl1-mesa-dri libgl1-mesa-glx libglx-mesa0 xvfb x11-utils
-
+        sudo apt-get install -y mesa-utils libgl1-mesa-dri libgl1 libglx-mesa0 xvfb
     - name: Set environment variables for Mesa3D
       run: |
         echo "LIBGL_ALWAYS_SOFTWARE=1" >> $GITHUB_ENV
-        echo "MESA_LOADER_DRIVER_OVERRIDE=softpipe" >> $GITHUB_ENV
+        echo "MESA_LOADER_DRIVER_OVERRIDE=llvmpipe" >> $GITHUB_ENV
     - name: Start xvfb
       run: |
-        sudo Xvfb :99 -ac -screen 0 1024x768x24 > build/reports/xvfb.log 2>&1 &
+        sudo Xvfb :99 -ac -screen 0 1024x768x16 &
         export DISPLAY=:99
         echo "DISPLAY=:99" >> $GITHUB_ENV
-        sleep 3  # Give xvfb some time to start
-    - name: Verify xvfb
-      run: xdpyinfo -display :99
     - name: Verify Mesa3D Installation
       run: |
         glxinfo | grep "OpenGL"
@@ -73,7 +69,8 @@ jobs:
       if: success() || failure() # always run even if the previous step fails
       with:
         name: changed-images
-        path: '**/build/changed-images/**'
+        path: |
+            '**/build/changed-images/**'
     - name: Upload error logs
       if: always()  # Ensures this step runs even if previous steps fail
       uses: actions/upload-artifact@v3
